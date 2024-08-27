@@ -48,16 +48,25 @@ const prompt = ChatPromptTemplate.fromMessages([
 
 const chat_history = [];
 
-const agent = await createToolCallingAgent({ llm: model, tools, prompt });
 
-const agentExecutor = new AgentExecutor({
-    agent,
-    tools,
-    verbose: true,
-});
+async function initializeAgent() {
+    const agent = await createToolCallingAgent({ llm: model, tools, prompt });
+
+    const agentExecutor = new AgentExecutor({
+        agent,
+        tools,
+        //verbose: true,
+    });
+
+    return agentExecutor;
+}
+
 
 export const searchIA = async (req, res) => {
     try {
+
+        const agentExecutor = await initializeAgent();
+        
         const inputUser = req.body.input;
         const response = await agentExecutor.invoke({
             input: inputUser,

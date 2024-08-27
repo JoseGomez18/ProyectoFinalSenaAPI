@@ -1,8 +1,8 @@
 const dbConfig = {
-    host: 'localhost',
-    user: 'root',
-    password: '2605',
-    database: 'db_Lugaresia'
+    host: 'localhost:3306',
+    user: 'CarlosNieto',
+    password: 'Supermen2.1',
+    database: 'db_lugaresia'
 };
 
 export default dbConfig;
