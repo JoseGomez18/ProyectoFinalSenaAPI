@@ -1,7 +1,10 @@
-import mysql from 'mysql2/promise';
-import dbConfig from '../config/dbConfig.js';
+// import mysql from 'mysql2/promise';
+// import dbConfig from '../config/dbConfig.js';
 
-export default class Consultas {
+const mysql = require('mysql2/promise');
+const dbConfig = require('../config/dbConfig.js');
+
+class Consultas {
     async connect() {
         const connection = await mysql.createConnection(dbConfig);
         return connection;
@@ -39,3 +42,5 @@ export default class Consultas {
         // Implementación no necesaria aquí, ya que la conexión se cierra automáticamente después de cada consulta
     }
 }
+
+module.exports = Consultas; // Exporta la clase

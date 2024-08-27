@@ -5,4 +5,6 @@ const dbConfig = {
     database: 'db_Lugaresia'
 };
 
-export default dbConfig;
+// export default dbConfig;
+
+module.exports = dbConfig;
