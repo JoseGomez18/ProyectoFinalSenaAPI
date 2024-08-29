@@ -14,6 +14,13 @@ export default class Consultas {
         return rows;
     }
 
+    async selectFrom(table) {
+        const connection = await this.connect();
+        const [rows] = await connection.execute(`SELECT * FROM ${table}`);
+        await connection.end();
+        return rows;
+    }
+
     async selectDetallesLugar(id) {
         const connection = await this.connect();
         const [rows] = await connection.execute(`SELECT 
