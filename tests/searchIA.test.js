@@ -5,7 +5,7 @@ const request = require('supertest');
 const app = require('../app')
 
 describe('POST /api/busquedaIA', () => {
-    it('Send Prompt chat IA', async () => {
+    it('Send Prompt chat IA and response GPT', async () => {
         const response = await request(app)
             .post('/api/busquedaIA')
             .send({ "input": 'lugares calidos de españa' });
