@@ -14,6 +14,13 @@ export default class Consultas {
         return rows;
     }
 
+    async selectLogin(table, user) {
+        const connection = await this.connect();
+        const [rows, fields] = await connection.execute(`SELECT correo,contra FROM ${table} WHERE correo = '${user}'`)
+        await connection.end();
+        return rows;
+    }
+
     async selectFrom(table) {
         const connection = await this.connect();
         const [rows] = await connection.execute(`SELECT * FROM ${table}`);
@@ -40,6 +47,12 @@ export default class Consultas {
             l.id = ${id}`);
         await connection.end();
         return rows;
+    }
+
+    async insert(table, values) {
+        const connection = await this.connect()
+        const [rows, fields] = await connection.execute(`INSERT INTO ${table} VALUES ${values}`);
+        return rows
     }
 
     async closeConect() {
