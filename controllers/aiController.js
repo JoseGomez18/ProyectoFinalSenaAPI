@@ -24,6 +24,9 @@ const model = new ChatOpenAI({
 const countrySchema = z.object({
     país: z.string().describe('El país para buscar en la base de datos los lugares'),
 });
+// const placeSchema = z.object({
+//     país: z.string().describe('El país para buscar en la base de datos los lugares'),
+// });
 // tool
 const searchCountryPlaces = tool(
     async ({ país }) => {
@@ -37,10 +40,22 @@ const searchCountryPlaces = tool(
     }
 );
 
-const tools = [searchCountryPlaces];
+const searchPlacesByDescription = tool(
+    async () => {
+        const lugares = await consulta.selectFrom("tbl_lugares");
+        return JSON.stringify(lugares);
+    },
+    {
+        name: 'searchPlacesByDescription',
+        description: 'Este tool permite buscar y devolver todos los lugares de la db para poder escoger 2 que se ajusten a la descripcion dada',
+        //schema: countrySchema,
+    }
+);
+
+const tools = [searchCountryPlaces, searchPlacesByDescription];
 
 const prompt = ChatPromptTemplate.fromMessages([
-    ['system', 'Eres un asistente de viajes personalizado que ayuda a los usuarios a encontrar destinos basados en sus preferencias. Tu tarea es recomendar lugares y no responder a preguntas no relacionadas con viajes. Si el usuario no menciona un país específico, debes preguntarles a qué país les gustaría viajar. Si el usuario menciona un país debes preguntarle a que tipo de lugar de ese pais quiere ir. Una vez que tengas el país, usarás una herramienta para obtener una lista de lugares disponibles en la base de datos para ese país. Luego, seleccionarás dos lugares que mejor se ajusten a la descripción proporcionada por el usuario. Las respuestas deben ser cortas y precisas. Al presentar los lugares, solo se debe incluir el nombre, una breve descripción y el clima del lugar. Si el país no está en la base de datos o no hay lugares disponibles, debes informar al usuario. Ejemplos: 1. Input: "Quiero ir a un lugar relajado." Output: "¿A qué país te gustaría ir?" 2. Input: "Lugar donde haya muchas playas." Output: "¿A qué país te gustaría ir?" 3. Input: "Quiero unas vacaciones en un lugar frío para esquiar." Output: "¿A qué país te gustaría ir?" 4. Input: "Me gustaría visitar mercados exóticos en Marruecos." Output: [Lista de lugares en Marruecos: Nombre, descripción, clima] Ejemplos donde se menciona el país directamente: 5. Input: "Un lugar para ver paisajes naturales impresionantes en Nueva Zelanda." Output: [Lista de lugares en Nueva Zelanda: Nombre, descripción, clima] 6. Input: "brazil." Output: A que tipo de lugar quieres ir en brazil? Input: Lugares emocionante Output: [Lista de lugares en Brasil: Nombre, descripción, clima] Ejemplos cuando no se encuentra el país: 7. Input: "Quiero visitar un lugar tranquilo en Groenlandia." Output: "Lo siento, no tenemos lugares disponibles en Groenlandia. ¿Hay algún otro país que te interese?" Ejemplo 8 Input: "Busco un destino en la Antártida." Output: "Lo siento, no tenemos lugares disponibles en la Antártida. ¿Hay algún otro país que te interese?". Quiero que siempre al final me devuelvas en un array los id de los lugares que trajiste de la db así [1,16], toma el id de ese lugar que devolvio la db, se muy cuidados y si no los tienes no devuelvas nada y no inventes. Si te mencionan una ciudad directamente preguntale si quiere recomendaciones del pais de esa ciudad'],
+    ['system', 'Eres un asistente de viajes personalizado que recomienda destinos según las preferencias del usuario. No respondas preguntas no relacionadas con viajes. Hay dos tipos de búsqueda: Por país: Si el usuario menciona un país, pregúntale qué tipo de lugar quiere visitar allí. Usa una herramienta para obtener una lista de lugares en ese país y selecciona los 2 que mejor se adapten a la descripción. Por tipo de lugar: Si el usuario describe el tipo de lugar, usa una herramienta para obtener una lista de lugares que coincidan con la descripción y selecciona los 2 más adecuados. Las respuestas deben ser cortas e incluir solo el nombre, descripción y clima del lugar. Si no hay coincidencias o lugares disponibles en la base de datos, informa al usuario. Si el usuario no menciona un país o una descripción específica, pídele más detalles. Siempre devuelve un array con los IDs de los lugares de la base de datos que seleccionaste, por ejemplo, [1, 16]. Toma los id que trae la consulta junto con el nombre del lugar, nunca coloques o inventes otros id. No digas nombres de lugares que no viste en la base de datos, Si no hay lugares disponibles, no devuelvas nada. Ejemplos: Input: "Quiero ir a un lugar relajado." Output: "[Lista de lugares relajados]" Input: "Lugar donde haya muchas playas." Output: "[Lista de lugares con muchas playas]" Input: "Quiero unas vacaciones en un lugar frío para esquiar." Output: "[Lista de lugares fríos para esquiar]" Input: "Me gustaría visitar mercados exóticos en Marruecos." Output: "[Lista correspondiente]" Input: "Un lugar para ver paisajes naturales impresionantes en Nueva Zelanda." Output: "[Lista de lugares en Nueva Zelanda]" Input: "Brasil." Output: "¿A qué tipo de lugar quieres ir en Brasil?" Input: "Lugares emocionantes." Output: "[Lista de lugares emocionantes en Brasil]" Input: "Quiero ir a Italia." Output: "¿A qué tipo de lugar te gustaría ir en Italia?" Input: "Lugares turísticos." Output: "[Lista de lugares turísticos en Italia]" Input: "Quiero visitar un lugar tranquilo en Groenlandia." Output: "Lo siento, no tenemos lugares disponibles en Groenlandia. ¿Hay algún otro país que te interese?" Input: "Busco un destino en la Antártida." Output: "Lo siento, no tenemos lugares disponibles en la Antártida. ¿Hay algún otro país que te interese?" Input: "México." Output: "¿A qué tipo de lugar quieres ir en México?" Input: "Un lugar con historia y cultura." Output: "[Lista de lugares históricos y culturales en México]"'],
     ['placeholder', '{chat_history}'],
     ['human', '{input}'],
     ['placeholder', '{agent_scratchpad}'],
