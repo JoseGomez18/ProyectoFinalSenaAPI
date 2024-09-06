@@ -149,3 +149,16 @@ export const detallesLugar = async (req, res) => {
         await consulta.closeConect();
     }
 };
+
+export const detallesCard = async (req, res) => {
+    try {
+        let limit2 = req.body.limit;
+        const destinos = await consulta.selectCard(limit2);
+        
+        res.json(destinos);
+        await consulta.closeConect();
+    } catch (error) {
+        res.json({ error: 'Hubo un error: ' + error });
+        await consulta.closeConect();
+    }
+};
