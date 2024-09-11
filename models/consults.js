@@ -28,6 +28,14 @@ export default class Consultas {
         return rows;
     }
 
+    
+    async selectCard(limit) {
+        const connection = await this.connect();
+        const [rows] = await connection.execute(`SELECT * FROM tbl_lugares LIMIT ${limit};`);
+        await connection.end();
+        return rows;
+    }
+
     async selectDetallesLugar(id) {
         const connection = await this.connect();
         const [rows] = await connection.execute(`SELECT 
