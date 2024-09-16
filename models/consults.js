@@ -28,7 +28,14 @@ export default class Consultas {
         return rows;
     }
 
-    
+    async selectHotelesLugar(id) {
+        const connection = await this.connect();
+        const [rows] = await connection.execute(`SELECT * FROM tbl_hoteles_lugar WHERE lugar_id = ${id}`);
+        await connection.end();
+        return rows;
+    }
+
+
     async selectCard(limit) {
         const connection = await this.connect();
         const [rows] = await connection.execute(`SELECT * FROM tbl_lugares LIMIT ${limit};`);

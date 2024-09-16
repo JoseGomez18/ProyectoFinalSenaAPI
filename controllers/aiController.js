@@ -150,11 +150,26 @@ export const detallesLugar = async (req, res) => {
     }
 };
 
+export const hotelesLugar = async (req, res) => {
+    try {
+        const id = req.body.id;
+
+        const resultados = await consulta.selectHotelesLugar(id);
+
+        res.json(resultados);
+
+        await consulta.closeConect();
+    } catch (error) {
+        res.json({ error: 'Hubo un error: ' + error });
+        await consulta.closeConect();
+    }
+};
+
 export const detallesCard = async (req, res) => {
     try {
         let limit2 = req.body.limit;
         const destinos = await consulta.selectCard(limit2);
-        
+
         res.json(destinos);
         await consulta.closeConect();
     } catch (error) {
@@ -169,14 +184,14 @@ export const lugaresPorIds = async (req, res) => {
         if (!Array.isArray(ids) || ids.length === 0) {
             return res.status(400).json({ error: 'Se requiere un array de IDs' });
         }
-        
+
         const idList = ids.join(',');
         const destinos = await consulta.select('tbl_lugares', `id IN (${idList})`);
-        
+
         res.json(destinos);
         await consulta.closeConect();
     } catch (error) {
         res.json({ error: 'Hubo un error: ' + error });
         await consulta.closeConect();
-    } 
+    }
 };
