@@ -4,6 +4,7 @@ import dbConfig from '../config/dbConfig.js';
 export default class Consultas {
     async connect() {
         const connection = await mysql.createConnection(dbConfig);
+
         return connection;
     }
 
