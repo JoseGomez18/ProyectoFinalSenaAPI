@@ -14,6 +14,13 @@ export default class Consultas {
         return rows;
     }
 
+    async selectPrueba(table, condition) {
+        const connection = await this.connect();
+        const [rows] = await connection.execute(`SELECT id,nombre_lugar,descripcion FROM ${table} WHERE ${condition}`);
+        await connection.end();
+        return rows;
+    }
+
     async selectLogin(table, user) {
         const connection = await this.connect();
         const [rows, fields] = await connection.execute(`SELECT correo,contra FROM ${table} WHERE correo = '${user}'`)
