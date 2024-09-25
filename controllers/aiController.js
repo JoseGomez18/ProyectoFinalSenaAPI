@@ -207,3 +207,22 @@ export const lugaresPorIds = async (req, res) => {
         await consulta.closeConect();
     }
 };
+
+export const insertFav = async (req, res) => {
+    try {
+        const { idUser, idLugar } = req.body
+
+        const result = await consulta.insert('tbl_favoritos_lugar', `(null,${idUser},${idLugar},null)`);
+        if (result.affectedRows) {
+            res.json({ ok: "Registro exitoso" })
+            console.log("Registro exitoso")
+        } else {
+            res.json({ ok: "fallo en el registro" })
+            console.log("fallo en el registro")
+        }
+        consulta.closeConect();
+    } catch (error) {
+        console.log(error)
+        res.json({ error: error })
+    }
+};
