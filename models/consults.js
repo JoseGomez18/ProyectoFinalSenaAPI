@@ -78,6 +78,32 @@ export default class Consultas {
         return rows
     }
 
+    async validationFav(idUser,idLugar){
+        const connection = await this.connect();
+        const [rows] = await connection.execute(`SELECT COUNT(*) FROM tbl_favoritos_lugar WHERE usuario_id = ${idUser} AND lugar_id = ${idLugar}`);
+        await connection.end();
+        return rows;
+    }
+
+    async selectFavoritosUser(idUser){
+        const connection = await this.connect();
+        const [rows] = await connection.execute(`  SELECT 
+            f.id AS favorito_id,
+            l.id AS lugar_id,
+            l.nombre_lugar,
+            l.clima,
+            l.descripcion,
+            l.imagen
+        FROM 
+            tbl_favoritos_lugar f
+        INNER JOIN 
+            tbl_lugares l ON f.lugar_id = l.id
+        WHERE 
+            f.usuario_id = ${idUser};`);
+        await connection.end();
+        return rows;
+    }
+
     async closeConect() {
         // Implementación no necesaria aquí, ya que la conexión se cierra automáticamente después de cada consulta
     }
