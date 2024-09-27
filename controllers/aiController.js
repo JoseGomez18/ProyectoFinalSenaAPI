@@ -212,7 +212,7 @@ export const insertFav = async (req, res) => {
     try {
         const { idUser, idLugar } = req.body
 
-        const validation = await consulta.validationFav(idUser,idLugar)
+        const validation = await consulta.validationFav(idUser, idLugar)
         console.log(validation[0]['COUNT(*)'])
         if (validation[0]['COUNT(*)'] > 0) {
             // El lugar ya está en la lista de favoritos
@@ -221,16 +221,16 @@ export const insertFav = async (req, res) => {
             return;
         }
 
-            const result = await consulta.insert('tbl_favoritos_lugar', `(null,${idUser},${idLugar},null)`);
-            if (result.affectedRows) {
-                res.json({ ok: "Registro exitoso" })
-                console.log("Registro exitoso")
-            } else {
-                res.json({ ok: "fallo en el registro" })
-                console.log("fallo en el registro")
-            }
-            consulta.closeConect();
-        
+        const result = await consulta.insert('tbl_favoritos_lugar', `(null,${idUser},${idLugar},null)`);
+        if (result.affectedRows) {
+            res.json({ ok: "Registro exitoso" })
+            console.log("Registro exitoso")
+        } else {
+            res.json({ ok: "fallo en el registro" })
+            console.log("fallo en el registro")
+        }
+        consulta.closeConect();
+
     } catch (error) {
         console.log(error)
         res.json({ error: error })
@@ -240,19 +240,40 @@ export const insertFav = async (req, res) => {
 
 export const obtenerFav = async (req, res) => {
     try {
-        const { idUser} = req.body
+        const { idUser } = req.body
         const lugares = await consulta.selectFavoritosUser(idUser)
 
-        if(lugares.fieldCount == 0){
+        if (lugares.fieldCount == 0) {
             res.json({ error: "Este user no tiene favs" })
             console.log("Este user no tiene favs")
             return;
         }
         res.json({ lugares: lugares })
         console.log("exitoso")
-           
+
         consulta.closeConect();
-        
+
+    } catch (error) {
+        console.log(error)
+        res.json({ error: error })
+    }
+};
+
+export const eliminarFav = async (req, res) => {
+    try {
+        const { idUser, idlugar } = req.body
+        const lugares = await consulta.deleteFavoritos(idUser, idlugar)
+
+        if (lugares.affectedRows == 0) {
+            res.json({ error: "No se elimino nada" })
+            console.log("Este user no tiene favs")
+            return;
+        }
+        res.json({ eliminado: "se elimino correctamente" })
+        console.log("exitoso borrado")
+
+        consulta.closeConect();
+
     } catch (error) {
         console.log(error)
         res.json({ error: error })
