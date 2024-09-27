@@ -261,8 +261,8 @@ export const obtenerFav = async (req, res) => {
 
 export const eliminarFav = async (req, res) => {
     try {
-        const { idUser, idlugar } = req.body
-        const lugares = await consulta.deleteFavoritos(idUser, idlugar)
+        const { idUser, idLugar } = req.body
+        const lugares = await consulta.deleteFavoritos(idUser, idLugar)
 
         if (lugares.affectedRows == 0) {
             res.json({ error: "No se elimino nada" })
