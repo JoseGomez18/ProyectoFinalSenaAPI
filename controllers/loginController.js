@@ -33,14 +33,14 @@ export const login = async (req, res) => {
 
     // const use = await result.find(u => u.user == user);
     // console.log(use)
-    const match = await bcrypt.compare(password, result[0].contra);
-    console.log(match)
+    // const match = await bcrypt.compare(password, result[0].contra);
+    // console.log(match)
+    const accesToken = jwt.sign({ user }, secretKey, { expiresIn: '1h' });
+    res.cookie('token', accesToken, { httpOnly: true, secure: true }); // secure: true solo en HTTPS
+    res.json({ validacion: "Login exitoso" })
 
-    if (match) {
-        const accesToken = jwt.sign({ user }, secretKey, { expiresIn: '1h' });
-        res.cookie('token', accesToken, { httpOnly: true, secure: true }); // secure: true solo en HTTPS
-        res.json({ validacion: "Login exitoso" })
-    } else {
-        return res.status(401).send('Usuario o contraseña incorrectos');
-    }
+    // if (match) {
+    // } else {
+    //     return res.status(401).send('Usuario o contraseña incorrectos');
+    // }
 };

@@ -5,7 +5,22 @@ import placeRoutes from './routes/placeRoutes.js';
 const app = Express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cors());
+const corsOptions = {
+    origin: process.env.VUE_APP_RUTA_FRONT,
+    credentials: true
+}
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'https://proyectofinalsena.onrender.com');  // Origen permitido
+    res.header('Access-Control-Allow-Credentials', 'true');  // Permitir credenciales
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');  // Métodos permitidos
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');  // Cabeceras permitidas
+    next();
+});
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); 
+
 app.use(Express.json());
 
 app.use('/api', placeRoutes);
