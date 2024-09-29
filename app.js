@@ -6,7 +6,7 @@ const app = Express();
 const PORT = process.env.PORT || 3001;
 
 const corsOptions = {
-    origin: process.env.VUE_APP_RUTA_FRONT,
+    origin: [process.env.VUE_APP_RUTA_FRONT, 'http://localhost:8080'],
     credentials: true
 }
 
@@ -19,7 +19,7 @@ app.use((req, res, next) => {
 });
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); 
+app.options('*', cors(corsOptions));
 
 app.use(Express.json());
 
