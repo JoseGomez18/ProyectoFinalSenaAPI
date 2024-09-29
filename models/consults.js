@@ -24,7 +24,7 @@ export default class Consultas {
 
     async selectLogin(table, user) {
         const connection = await this.connect();
-        const [rows, fields] = await connection.execute(`SELECT correo,contra FROM ${table} WHERE correo = '${user}'`)
+        const [rows, fields] = await connection.execute(`SELECT id,correo,contra FROM ${table} WHERE correo = '${user}'`)
         await connection.end();
         return rows;
     }

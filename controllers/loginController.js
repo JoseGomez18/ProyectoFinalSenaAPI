@@ -37,7 +37,7 @@ export const login = async (req, res) => {
     // console.log(match)
     const accesToken = jwt.sign({ user }, secretKey, { expiresIn: '1h' });
     res.cookie('token', accesToken, { httpOnly: true, secure: true }); // secure: true solo en HTTPS
-    res.json({ validacion: "Login exitoso" })
+    res.json({ validacion: "Login exitoso", usuario: result })
 
     // if (match) {
     // } else {
