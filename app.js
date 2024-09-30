@@ -9,9 +9,10 @@ const corsOptions = {
     origin: [process.env.VUE_APP_RUTA_FRONT, 'http://localhost:8080'],
     credentials: true
 }
-
+// usar este para pruebas loclahos
+// 'http://localhost:8080'
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', ['https://proyectofinalsena.onrender.com', 'http://localhost:8080']);  // Origen permitido
+    res.header('Access-Control-Allow-Origin', ['https://proyectofinalsena.onrender.com']);  // Origen permitido
     res.header('Access-Control-Allow-Credentials', 'true');  // Permitir credenciales
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');  // Métodos permitidos
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');  // Cabeceras permitidas
