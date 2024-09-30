@@ -10,7 +10,7 @@ const corsOptions = {
     credentials: true
 }
 // usar este para pruebas loclahos
-// 'http://localhost:8080'
+ 'http://localhost:8080'
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', ['https://proyectofinalsena.onrender.com']);  // Origen permitido
     res.header('Access-Control-Allow-Credentials', 'true');  // Permitir credenciales
