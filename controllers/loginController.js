@@ -31,16 +31,16 @@ export const login = async (req, res) => {
     console.log(result)
     consulta.closeConect();
 
-    // const use = await result.find(u => u.user == user);
-    // console.log(use)
-    // const match = await bcrypt.compare(password, result[0].contra);
-    // console.log(match)
     const accesToken = jwt.sign({ user }, secretKey, { expiresIn: '1h' });
     res.cookie('token', accesToken, { httpOnly: true, secure: true }); // secure: true solo en HTTPS
     res.json({ validacion: "Login exitoso", usuario: result })
 
-    // if (match) {
-    // } else {
-    //     return res.status(401).send('Usuario o contraseña incorrectos');
-    // }
 };
+// const use = await result.find(u => u.user == user);
+// console.log(use)
+// const match = await bcrypt.compare(password, result[0].contra);
+// console.log(match)
+// if (match) {
+// } else {
+//     return res.status(401).send('Usuario o contraseña incorrectos');
+// }
